@@ -26,5 +26,16 @@ namespace InterviewTask.Services
         {
             return HelperServiceFactory.Create().FirstOrDefault(g => g.Id == id);
         }
+
+
+        /// <summary>
+        /// Going to write a file log
+        /// </summary>
+        /// <param name="log">The Description about action/error.</param>
+        /// <returns></returns>
+        public void WriteLog(string log)
+        {
+            HelperServiceFactory.WriteLog(log);
+        }
     }
 }

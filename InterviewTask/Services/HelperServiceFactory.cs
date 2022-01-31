@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Web;
 using InterviewTask.Models;
 
 namespace InterviewTask.Services
@@ -27,7 +30,10 @@ namespace InterviewTask.Services
                 FridayOpeningHours = weekdayOpeningTimes,
                 SaturdayOpeningHours = closedTimes,
                 SundayOpeningHours = closedTimes,
-                TelephoneNumber = "0207 0000000"
+                TelephoneNumber = "0207 0000000",
+                Latitude = 51.5654683,
+                Longitude = -0.0253422
+
             };
 
             var northLondonHelper = new HelperServiceModel
@@ -42,7 +48,10 @@ namespace InterviewTask.Services
                 FridayOpeningHours = closedTimes,
                 SaturdayOpeningHours = closedTimes,
                 SundayOpeningHours = closedTimes,
-                TelephoneNumber = "0207 0000000"
+                TelephoneNumber = "0207 0000000",
+                Latitude = 51.5287352,
+                Longitude = -0.3817858
+
             };
 
             var bristolHelper = new HelperServiceModel
@@ -57,7 +66,9 @@ namespace InterviewTask.Services
                 FridayOpeningHours = weekdayOpeningTimes,
                 SaturdayOpeningHours = closedTimes,
                 SundayOpeningHours = closedTimes,
-                TelephoneNumber = "0117 0000000"
+                TelephoneNumber = "0117 0000000",
+                Latitude = 51.4686194,
+                Longitude = -2.7308023
             };
 
             var somersetHelper = new HelperServiceModel
@@ -72,7 +83,9 @@ namespace InterviewTask.Services
                 FridayOpeningHours = weekdayOpeningTimes,
                 SaturdayOpeningHours = closedTimes,
                 SundayOpeningHours = closedTimes,
-                TelephoneNumber = "0207 0000000"
+                TelephoneNumber = "0207 0000000",
+                Latitude = 51.0764444,
+                Longitude = -3.6025624
             };
 
             var nottinghamHelper = new HelperServiceModel
@@ -87,7 +100,9 @@ namespace InterviewTask.Services
                 FridayOpeningHours = weekdayOpeningTimes,
                 SaturdayOpeningHours = weekdayOpeningTimes,
                 SundayOpeningHours = weekdayOpeningTimes,
-                TelephoneNumber = "0116 0000000"
+                TelephoneNumber = "0116 0000000",
+                Latitude = 52.954147,
+                Longitude = -1.3101462
             };
 
             var liverpoolHelper = new HelperServiceModel
@@ -102,7 +117,9 @@ namespace InterviewTask.Services
                 FridayOpeningHours = weekdayOpeningTimes,
                 SaturdayOpeningHours = weekendOpeningTimes,
                 SundayOpeningHours = weekendOpeningTimes,
-                TelephoneNumber = "0151 0000000"
+                TelephoneNumber = "0151 0000000",
+                Latitude = 53.4123001,
+                Longitude = -3.0561432
             };
 
             var northernIrelandHelper = new HelperServiceModel
@@ -117,7 +134,9 @@ namespace InterviewTask.Services
                 FridayOpeningHours = weekdayOpeningTimes,
                 SaturdayOpeningHours = weekdayOpeningTimes,
                 SundayOpeningHours = weekendOpeningTimes,
-                TelephoneNumber = "0289 0000000"
+                TelephoneNumber = "0289 0000000",
+                Latitude = 54.6641891,
+                Longitude = -7.9232255
             };
 
             var westMidlandsHelper = new HelperServiceModel
@@ -132,7 +151,9 @@ namespace InterviewTask.Services
                 FridayOpeningHours = alternativeOpeningTime,
                 SaturdayOpeningHours = alternativeOpeningTime,
                 SundayOpeningHours = alternativeOpeningTime,
-                TelephoneNumber = "0289 0000000"
+                TelephoneNumber = "0289 0000000",
+                Latitude = 52.5053081,
+                Longitude = -2.0955963
             };
 
             var walesHelper = new HelperServiceModel
@@ -147,7 +168,9 @@ namespace InterviewTask.Services
                 FridayOpeningHours = weekdayOpeningTimes,
                 SaturdayOpeningHours = weekdayOpeningTimes,
                 SundayOpeningHours = weekendOpeningTimes,
-                TelephoneNumber = "029 8800000"
+                TelephoneNumber = "029 8800000",
+                Latitude = 52.3874564,
+                Longitude = -6.4029696
             };
 
             var fifeHelper = new HelperServiceModel
@@ -162,36 +185,69 @@ namespace InterviewTask.Services
                 FridayOpeningHours = weekdayOpeningTimes,
                 SaturdayOpeningHours = weekdayOpeningTimes,
                 SundayOpeningHours = weekendOpeningTimes,
-                TelephoneNumber = "0159 2000000"
+                TelephoneNumber = "0159 2000000",
+                Latitude = 56.2291552,
+                Longitude = -3.7025362
             };
 
             var openingHours = new List<HelperServiceModel> { eastLondonHelper, northLondonHelper, bristolHelper, somersetHelper, nottinghamHelper, liverpoolHelper, northernIrelandHelper, westMidlandsHelper, walesHelper, fifeHelper };
 
+            WriteLog("Found list of services;");
+
             return DeliberateBug(openingHours);
         }
 
-        
+
         private static List<HelperServiceModel> DeliberateBug(List<HelperServiceModel> openingHours)
         {
-            var listCount = openingHours.Count;
-
-            var rnd = new Random();
-
-            var elementToDayNull = rnd.Next(0, listCount - 1);
-
-            //Additional task
-            //Simulate a lack of response from the server: 10% of the time, set weekday opening hours to null
-            // Handle this bug in your view - a simple error message (We're sorry, we are temporarily unable to display etc etc ) in the view cards is fine
-            if (rnd.Next(1, 10) > 9)
+            try
             {
-                openingHours[elementToDayNull].MondayOpeningHours = null;
-                openingHours[elementToDayNull].TuesdayOpeningHours = null;
-                openingHours[elementToDayNull].WednesdayOpeningHours = null;
-                openingHours[elementToDayNull].ThursdayOpeningHours = null;
-                openingHours[elementToDayNull].FridayOpeningHours = null;
+                var listCount = openingHours.Count;
+
+                var rnd = new Random();
+
+                var elementToDayNull = rnd.Next(0, listCount - 1);
+
+                //Additional task
+                //Simulate a lack of response from the server: 10% of the time, set weekday opening hours to null
+                // Handle this bug in your view - a simple error message (We're sorry, we are temporarily unable to display etc etc ) in the view cards is fine
+                if (rnd.Next(1, 10) > 9)
+                {
+                    openingHours[elementToDayNull].MondayOpeningHours = null;
+                    openingHours[elementToDayNull].TuesdayOpeningHours = null;
+                    openingHours[elementToDayNull].WednesdayOpeningHours = null;
+                    openingHours[elementToDayNull].ThursdayOpeningHours = null;
+                    openingHours[elementToDayNull].FridayOpeningHours = null;
+                }
+            }
+            catch (Exception)
+            {
+                WriteLog("We're sorry, we are temporarily unable to display");
+                throw;
             }
 
             return openingHours;
+        }
+
+
+        internal static void WriteLog(string Log)
+        {
+            try
+            {              
+                string pth = HttpContext.Current.Request.MapPath(HttpContext.Current.Request.ApplicationPath);
+                string fileName = Path.Combine(pth, "LogFile.txt");
+                FileStream stream = null;               
+                stream = new FileStream(fileName, FileMode.Append);
+               
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.WriteLine(DateTime.Now.ToString() + " : " + Log);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

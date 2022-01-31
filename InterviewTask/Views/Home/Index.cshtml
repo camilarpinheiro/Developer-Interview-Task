@@ -1,4 +1,7 @@
-﻿<!-- Header -->
+﻿
+@model IEnumerable<InterviewTask.Models.HelperServiceModel>
+
+<!-- Header -->
 <header class="header header-border mb-4">
     <div class="header-secondary">
         <div class="container">
@@ -161,48 +164,188 @@
             </div>
         </div>
     </section>
-    
+
+
     <!-- Create your cards here.  One has been provided as a template for use in your loop based on the results contained within your model -->
 
     <section>
         <div class="container">
             <div class="row">
-                <!-- Marie Curie Helper Service card -->
-                <div class="block promomanualblock col-md-4 col-sm-12">
-                    <article class="card HELPER-SERVICE-OPEN-CLOSED-CSS-CLASS">
-                        <div class="card__main">
-                            <!-- Card title -->
-                            <header class="card__header">
-                                <h3 class="card__header__h">HELPER SERVICE NAME</h3>
-                            </header>
-                            <hr>
-                            <div class="card__description mb-2">
-                                <p class="mb-0">
-                                    DESCRIPTION TEXT GOES HERE
-                                </p>
-                                <div class="card__arrow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 42" width="20" height="30" aria-hidden="true" role="img">
-                                        <title>Arrow / view article icon</title>
-                                        <path fill="none"
-                                              stroke="#000"
-                                              stroke-linecap="round"
-                                              stroke-miterlimit="10"
-                                              stroke-width="3"
-                                              d="M1.9 1c4.8 4.1 6.6 7.3 10.6 11.2 2.3 2.2 6.4 6.5 6.5 9.7-2.1 6-4.6 6.8-9.1 11.3C8.5 34.8 2.7 39.6 1 41"></path>
-                                    </svg>
+
+                @{string isOpen = "";}
+                @{string openReopen = "";}
+                @foreach (var modelo in Model)
+                {
+
+                    //string isOpen = "bg-color-light-grey";
+                    <!-- Marie Curie Helper Service card -->
+                    <div class="block promomanualblock col-md-4 col-sm-12">
+                        <p class="lead text-center">
+                            @{
+                                var dayofWeek = DateTime.Now.DayOfWeek.ToString();
+                                int helpServiceOpen = 0;
+                                int helpServiceClose = 0;
+                            }
+                            @switch (dayofWeek)
+                            {
+                                case "Monday":
+                                    helpServiceOpen = @modelo.MondayOpeningHours.FirstOrDefault();
+                                    helpServiceClose = modelo.MondayOpeningHours.LastOrDefault();
+                                    break;
+                                case "Tuesday":
+                                    helpServiceOpen = @modelo.TuesdayOpeningHours.FirstOrDefault();
+                                    helpServiceClose = modelo.TuesdayOpeningHours.LastOrDefault();
+                                    break;
+                                case "Wednesday":
+                                    helpServiceOpen = @modelo.WednesdayOpeningHours.FirstOrDefault();
+                                    helpServiceClose = modelo.WednesdayOpeningHours.LastOrDefault();
+                                    break;
+                                case "Thursday":
+                                    helpServiceOpen = @modelo.ThursdayOpeningHours.FirstOrDefault();
+                                    helpServiceClose = modelo.ThursdayOpeningHours.LastOrDefault();
+                                    break;
+                                case "Friday":
+                                    helpServiceOpen = @modelo.FridayOpeningHours.FirstOrDefault();
+                                    helpServiceClose = modelo.FridayOpeningHours.LastOrDefault();
+                                    break;
+                                case "Saturday":
+                                    helpServiceOpen = @modelo.SaturdayOpeningHours.FirstOrDefault();
+                                    helpServiceClose = modelo.SaturdayOpeningHours.LastOrDefault();
+                                    break;
+                                case "Sunday":
+                                    helpServiceOpen = @modelo.SundayOpeningHours.FirstOrDefault();
+                                    helpServiceClose = modelo.SundayOpeningHours.LastOrDefault();
+                                    break;
+
+                                default:
+                                    helpServiceOpen = 0;
+                                    helpServiceClose = 0;
+                                    break;
+                            }
+                            @*@if (DateTime.Now.Hour >= aberto && DateTime.Now.AddHours(1).Hour < fechado)*@
+                            @if (DateTime.Now.Hour >= helpServiceOpen && DateTime.Now.Hour < helpServiceClose)
+                            {
+                                //aberto
+                                openReopen = " Open Today until " + @helpServiceClose + (helpServiceClose > 11 ? "pm" : "am");
+                                isOpen = "bg-color-donation-orange";
+
+                            }
+                            else
+                            {
+                                var ab = false;
+                                var data = DateTime.Now;
+                                var nextDayOfWeek = "";
+                                string day = "";
+                                int timeOpen = 0;
+
+                                while (ab == false)
+                                {
+                                    data = data.AddDays(1);
+                                    nextDayOfWeek = data.DayOfWeek.ToString();
+
+                                    switch (nextDayOfWeek)
+                                    {
+                                        case "Monday":
+                                            helpServiceOpen = @modelo.MondayOpeningHours.FirstOrDefault();
+                                            helpServiceClose = modelo.MondayOpeningHours.LastOrDefault();
+                                            break;
+                                        case "Tuesday":
+                                            helpServiceOpen = @modelo.TuesdayOpeningHours.FirstOrDefault();
+                                            helpServiceClose = modelo.TuesdayOpeningHours.LastOrDefault();
+                                            break;
+                                        case "Wednesday":
+                                            helpServiceOpen = @modelo.WednesdayOpeningHours.FirstOrDefault();
+                                            helpServiceClose = modelo.WednesdayOpeningHours.LastOrDefault();
+                                            break;
+                                        case "Thursday":
+                                            helpServiceOpen = @modelo.ThursdayOpeningHours.FirstOrDefault();
+                                            helpServiceClose = modelo.ThursdayOpeningHours.LastOrDefault();
+                                            break;
+                                        case "Friday":
+                                            helpServiceOpen = @modelo.FridayOpeningHours.FirstOrDefault();
+                                            helpServiceClose = modelo.FridayOpeningHours.LastOrDefault();
+                                            break;
+                                        case "Saturday":
+                                            helpServiceOpen = @modelo.SaturdayOpeningHours.FirstOrDefault();
+                                            helpServiceClose = modelo.SaturdayOpeningHours.LastOrDefault();
+                                            break;
+                                        case "Sunday":
+                                            helpServiceOpen = @modelo.SundayOpeningHours.FirstOrDefault();
+                                            helpServiceClose = modelo.SundayOpeningHours.LastOrDefault();
+                                            break;
+
+                                        default:
+                                            helpServiceOpen = 0;
+                                            helpServiceClose = 0;
+                                            break;
+                                    }
+
+                                    if (helpServiceOpen > 0)
+                                    {
+                                        ab = true;
+                                        day = data.DayOfWeek.ToString();
+                                        timeOpen = helpServiceOpen;
+                                    }
+                                }
+
+                                //fechado
+                                if (@timeOpen > 12) { } else { }
+
+                                openReopen = "Reopens " + @day + " at " + @timeOpen + (timeOpen > 11 ? "pm" : "am");
+
+                                isOpen = "bg-color-light-grey";
+
+                            }
+                        </p>
+                        <article class="card @String.Format(isOpen) HELPER-SERVICE-OPEN-CLOSED-CSS-CLASS ">
+                            <div class="card__main">
+                                <!-- Card title -->
+                                <header class="card__header">
+                                    <h3 class="card__header__h">
+                                        <a href="https://www.mariecurie.org.uk/help/helper-volunteers" class="card-link">@modelo.Title</a>
+                                    </h3>
+
+                                </header>
+                                <hr>
+                                <div class="card__description mb-2">
+                                    <p class="mb-0">
+                                        @modelo.Description
+                                    </p>
+                                    <div class="card__arrow ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 42" width="20" height="30" aria-hidden="true" role="img">
+                                            <title>Arrow / view article icon</title>
+                                            <path fill="none"
+                                                  stroke="#000"
+                                                  stroke-linecap="round"
+                                                  stroke-miterlimit="10"
+                                                  stroke-width="3"
+                                                  d="M1.9 1c4.8 4.1 6.6 7.3 10.6 11.2 2.3 2.2 6.4 6.5 6.5 9.7-2.1 6-4.6 6.8-9.1 11.3C8.5 34.8 2.7 39.6 1 41"></path>
+                                        </svg>
+                                    </div>
                                 </div>
+                                <!-- Contact details -->
+                                <p class="lead text-center"> @modelo.TelephoneNumber</p>
+                                <hr>
+                                <!-- Opening hours information -->
+                                <!-- Opening hours information -->
+                                <p class="lead text-center">@openReopen</p>
+                                @*Reopens @dia at @horaAbertura*@
+                                <hr>
+                                <p class="lead text-center">
+                                    <input id="btnTemperatura"
+                                           type="button"
+                                           value="Check Weather"
+                                           onclick="GetTemperatura('@modelo.Latitude','@modelo.Longitude');"
+                                           class="btn btn-primary" />
+                                    <br />  
+                                </p>
                             </div>
-                            <!-- Contact details -->
-                            <p class="lead text-center">0800 090 2304</p>
-                            <hr>
-                            <!-- Opening hours information -->
-                            <p class="lead text-center">HELPER SERVICE HOURS | OPEN / CLOSED INFORMATION</p>
-                        </div>
-                        <a class="card__link--overlay" href="//www.mariecurie.org.uk/help/nursing-services" rel="bookmark" title="Nursing services">
-                            <span class="sr-only">HELPER SERVICE NAME</span>
-                        </a>
-                    </article>
-                </div>
+                            <a class="card__link--overlay" style="left:85% !important" href="//www.mariecurie.org.uk/help/nursing-services" rel="bookmark" title="Nursing services">
+                                <span class="sr-only">HELPER SERVICE NAME</span>
+                            </a>
+                        </article>
+                    </div>
+                }
             </div>
         </div>
     </section>
@@ -314,3 +457,53 @@
         </div>
     </div>
 </footer>
+
+@*Jquery API*@
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+    function GetTemperatura(lat, lon) {
+
+        var url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=7e69afbc63b1c3d2b142870f85de77c9&units=metric"
+        var settings = {
+            "url": url,
+            "method": "GET",
+            "timeout": 0,
+        };
+        $.ajax(settings).done(function (response) {
+            var msg = "At the moment the weather is " + parseInt(response.main.temp) + "ºC";
+            alert(msg);
+        });
+        // write the action of client in log, on click of button
+        $.post('@Url.Action("WriteLog","Home")?Log=Button Check Weather was clicked');
+    }
+
+    function getIp(callback) {
+        function response(s) {
+            callback(window.userip);
+            s.onload = s.onerror = null;
+            document.body.removeChild(s);
+        }
+        function trigger() {
+            window.userip = false;
+            var s = document.createElement("script");
+            s.async = true;
+            s.onload = function () {
+                response(s);
+            };
+            s.onerror = function () {
+                response(s);
+            };
+            s.src = "https://l2.io/ip.js?var=userip";
+            document.body.appendChild(s);
+        }
+        if (/^(interactive|complete)$/i.test(document.readyState)) {
+            trigger();
+        } else {
+            document.addEventListener('DOMContentLoaded', trigger);
+        }
+    }
+    getIp(function (ip) {
+        // write the ip of client in log, on load of the page
+        $.post('@Url.Action("WriteLog","Home")?Log=Index page was accessed from ip address => ' + ip);
+    });
+</script>
